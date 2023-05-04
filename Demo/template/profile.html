@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .profile-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .profile-img {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #adb5bd;
+            text-align: center;
+            line-height: 100px;
+            color: #fff;
+        }
+
+        .btn btn-danger mt-2 {
+            padding-right: 20px
+        }
+    </style>
+    <script>
+        function randomLightColor() {
+            const min = 200;
+            const max = 255;
+            const r = Math.floor(Math.random() * (max - min) + min);
+            const g = Math.floor(Math.random() * (max - min) + min);
+            const b = Math.floor(Math.random() * (max - min) + min);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileImg = document.querySelector('.profile-img');
+            profileImg.style.backgroundColor = randomLightColor();
+        });
+    </script>
+
+    <!-- Profile Content -->
+    <div class="profile-container">
+        <div class="profile-img">{{ current_user.username[0].upper() }}</div>
+        <h2 class="text-center mb-4">Welcome, {{ current_user.username }}!</h2>
+        <p><strong>Email:</strong> {{ current_user.email }}</p>
+        <p><strong>Top 3 Rated Recipes:</strong></p>
+        <ol>
+        {% for recipe_id, rating in top_ratings %}
+            {% set recipe = get_recipe_details(recipe_id) %}
+            <li>{{ recipe.title }} (Rating: {{ rating }})</li>
+        {% endfor %}
+        </ol>
+
+        <p><strong>Favorite Recipes:</strong></p>
+        <ul>
+        {% for recipe in favorite_recipes %}
+        <li>{{ recipe.title }}</li>
+        {% endfor %}
+        </ul>
+        <div class="d-grid gap-2 d-md-flex">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Menu</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger me-auto">Logout</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mb-4">Search Results</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td><a href="/recipe/{{ result.id }}">{{ result.title }}</a></td>
+                        <td>{{ result.averageRating|round(1) if result.averageRating else 'N/A' }}</td>
+                        <td>
+                            <!-- Add the new Favorite button -->
+                            <form action="{{ url_for('toggle_favorite_route', recipe_id=result.id) }}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-primary">Favorite</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/" class="btn btn-secondary">Back to search</a>
+    </div>
+{% endblock %}
